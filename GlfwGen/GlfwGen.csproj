@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <NoPackageAnalysis>true</NoPackageAnalysis>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)native\win-x64\glfw3.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <PackagePath>runtimes/win-x64/native</PackagePath>
+      <Pack>true</Pack>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NativeLibraryLoader" Version="1.0.10" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.4.0" />
+  </ItemGroup>
+
+  <Target Name="AutoGenerateBindings" BeforeTargets="CoreCompile">
+    <PropertyGroup>
+      <GlfwGeneratorExecutable>$(BinDir)/$(Configuration)/GlfwGenerator/netcoreapp2.0/GlfwGenerator.dll</GlfwGeneratorExecutable>
+    </PropertyGroup>
+    <Message Text="Generating bindings." />
+    <Exec Command="dotnet $(GlfwGeneratorExecutable) --out $(MSBuildThisFileDirectory)Generated" />
+  </Target>
+
+</Project>
